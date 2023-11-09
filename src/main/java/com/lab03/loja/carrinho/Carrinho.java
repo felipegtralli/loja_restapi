@@ -42,6 +42,10 @@ public class Carrinho {
   public Carrinho() {
   }
 
+  public Carrinho(Cliente cliente) {
+    this.cliente = cliente;
+  }
+
   public Carrinho(long id, Cliente cliente, Produto produto, Set<Pedido> pedido) {
     this.id = id;
     this.cliente = cliente;

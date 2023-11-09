@@ -1,5 +1,6 @@
 package com.lab03.loja.cliente;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lab03.loja.carrinho.Carrinho;
 import com.lab03.loja.endereco.Endereco;
 import com.lab03.loja.pedido.Pedido;
@@ -25,18 +26,28 @@ public class Cliente {
     private String email;
     private String senha;
 
+    @JsonIgnore
     @OneToOne(mappedBy="cliente", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Endereco endereco;
-
+    
+    @JsonIgnore
     @OneToOne(mappedBy="cliente")
     private Carrinho carrinho;
 
+    @JsonIgnore
     @OneToOne(mappedBy="cliente")
     private Pedido pedido;
 
 
     public Cliente() {}
+
+    public Cliente(String nome, String cpf, String email, String senha) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.senha = senha;
+    }
 
     public Cliente(long id, String nome, String cpf, String email, String senha, Endereco endereco, Carrinho carrinho, Pedido pedido) {
         this.id = id;

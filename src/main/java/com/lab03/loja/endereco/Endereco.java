@@ -31,6 +31,10 @@ public class Endereco {
     public Endereco() {
     }
 
+    public Endereco(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
     public Endereco(long id, String cep, String rua, String bairro, String cidade, String estado, String complemento, Cliente cliente) {
         this.id = id;
         this.cep = cep;
