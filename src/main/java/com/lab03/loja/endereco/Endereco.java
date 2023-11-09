@@ -1,5 +1,6 @@
 package com.lab03.loja.endereco;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lab03.loja.cliente.Cliente;
 
 import jakarta.persistence.Column;
@@ -22,6 +23,7 @@ public class Endereco {
     private String estado;
     private String complemento;
 
+    @JsonIgnore
     @OneToOne
     @MapsId
     @JoinColumn(name="id_cliente")

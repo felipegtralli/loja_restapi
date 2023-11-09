@@ -1,5 +1,8 @@
 package com.lab03.loja.produto;
 
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lab03.loja.carrinho.Carrinho;
 
 import jakarta.persistence.Column;
@@ -7,7 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Produto {
@@ -21,13 +24,19 @@ public class Produto {
     @Column(columnDefinition="varchar(5)")
     private String tamanho;
 
-    @OneToOne(mappedBy="produto")
-    private Carrinho carrinho;
+    @JsonIgnore
+    @ManyToMany(mappedBy="produtos")
+    private Set<Carrinho> carrinho;
     
     public Produto() {}
     
+    public Produto(String modelo, String marca, String tamanho) {
+        this.modelo = modelo;
+        this.marca = marca;
+        this.tamanho = tamanho;
+    }
 
-    public Produto(long id, String modelo, String marca, String tamanho, Carrinho carrinho) {
+    public Produto(long id, String modelo, String marca, String tamanho, Set<Carrinho> carrinho) {
         this.id = id;
         this.modelo = modelo;
         this.marca = marca;
@@ -67,11 +76,11 @@ public class Produto {
         this.tamanho = tamanho;
     }
 
-    public Carrinho getCarrinho() {
+    public Set<Carrinho> getCarrinho() {
         return this.carrinho;
     }
 
-    public void setCarrinho(Carrinho carrinho) {
+    public void setCarrinho(Set<Carrinho> carrinho) {
         this.carrinho = carrinho;
     }
 

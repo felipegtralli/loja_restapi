@@ -8,24 +8,23 @@ import com.lab03.loja.cliente.ClienteRepository;
 
 @Service
 public class CarrinhoService {
-    private CarrinhoRepository repository;    
+    private CarrinhoRepository carrinhoRepository;    
     private ClienteRepository clienteRepository;
 
 
     @Autowired
-    public CarrinhoService(CarrinhoRepository repository, ClienteRepository clienteRepository) {
-        this.repository = repository;        
+    public CarrinhoService(CarrinhoRepository carrinhoRepository, ClienteRepository clienteRepository) {
+        this.carrinhoRepository = carrinhoRepository;        
         this.clienteRepository = clienteRepository;
-
     }
 
     public void addCarrinho(Cliente cliente) {
         Carrinho carrinho = new Carrinho(cliente);
-        repository.save(carrinho);
+        carrinhoRepository.save(carrinho);
     }
 
     public Carrinho getCarrinho(long id) {
-        return repository.findByCliente(clienteRepository.findById(id).get()).get();
+        return carrinhoRepository.findByCliente(clienteRepository.findById(id).get()).get();
     }
 
 

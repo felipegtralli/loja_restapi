@@ -25,6 +25,10 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
+    public Cliente getCliente(long id) {
+        return clienteRepository.findById(id).get();
+    }
+
     public void addCliente(Cliente cliente) {
         clienteRepository.save(cliente);
         carrinhoService.addCarrinho(cliente);

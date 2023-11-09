@@ -1,7 +1,9 @@
 package com.lab03.loja.carrinho;
 
+import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lab03.loja.cliente.Cliente;
 import com.lab03.loja.pedido.Pedido;
 import com.lab03.loja.produto.Produto;
@@ -14,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -28,14 +31,15 @@ public class Carrinho {
     @JoinColumn(name="id_cliente", referencedColumnName="id_cliente")
     private Cliente cliente;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name="itens",
     joinColumns = 
         {@JoinColumn(name="id_carrinho", referencedColumnName="id_carrinho")},
       inverseJoinColumns = 
         {@JoinColumn(name="id_produto", referencedColumnName="id_produto")})
-    private Produto produto;
+    private List<Produto> produtos;
 
+    @JsonIgnore
     @OneToMany(mappedBy="carrinho")
     private Set<Pedido> pedido;
 
@@ -46,10 +50,10 @@ public class Carrinho {
     this.cliente = cliente;
   }
 
-  public Carrinho(long id, Cliente cliente, Produto produto, Set<Pedido> pedido) {
+  public Carrinho(long id, Cliente cliente, List<Produto> produtos, Set<Pedido> pedido) {
     this.id = id;
     this.cliente = cliente;
-    this.produto = produto;
+    this.produtos = produtos;
     this.pedido = pedido;
   }
 
@@ -69,12 +73,12 @@ public class Carrinho {
     this.cliente = cliente;
   }
 
-  public Produto getProduto() {
-    return this.produto;
+  public List<Produto> getProdutos() {
+    return this.produtos;
   }
 
-  public void setProduto(Produto produto) {
-    this.produto = produto;
+  public void setProduto(List<Produto> produtos) {
+    this.produtos = produtos;
   }
 
   public Set<Pedido> getPedido() {
@@ -90,7 +94,7 @@ public class Carrinho {
     return "{" +
       " id='" + getId() + "'" +
       ", cliente='" + getCliente() + "'" +
-      ", produto='" + getProduto() + "'" +
+      ", produto='" + getProdutos() + "'" +
       ", pedido='" + getPedido() + "'" +
       "}";
   }

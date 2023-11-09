@@ -1,5 +1,7 @@
 package com.lab03.loja.cliente;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lab03.loja.carrinho.Carrinho;
 import com.lab03.loja.endereco.Endereco;
@@ -11,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 
@@ -36,8 +39,8 @@ public class Cliente {
     private Carrinho carrinho;
 
     @JsonIgnore
-    @OneToOne(mappedBy="cliente")
-    private Pedido pedido;
+    @OneToMany(mappedBy="cliente")
+    private Set<Pedido> pedido;
 
 
     public Cliente() {}
@@ -49,7 +52,7 @@ public class Cliente {
         this.senha = senha;
     }
 
-    public Cliente(long id, String nome, String cpf, String email, String senha, Endereco endereco, Carrinho carrinho, Pedido pedido) {
+    public Cliente(long id, String nome, String cpf, String email, String senha, Endereco endereco, Carrinho carrinho, Set<Pedido> pedido) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -116,11 +119,11 @@ public class Cliente {
         this.carrinho = carrinho;
     }
 
-    public Pedido getPedido() {
+    public Set<Pedido> getPedido() {
         return this.pedido;
     }
 
-    public void setPedido(Pedido pedido) {
+    public void setPedido(Set<Pedido> pedido) {
         this.pedido = pedido;
     }
 
