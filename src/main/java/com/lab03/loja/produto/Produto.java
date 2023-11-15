@@ -3,14 +3,14 @@ package com.lab03.loja.produto;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lab03.loja.carrinho.Carrinho;
+import com.lab03.loja.itens.Itens;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Produto {
@@ -21,12 +21,13 @@ public class Produto {
     
     private String modelo;
     private String marca;
+    private double valor;
     @Column(columnDefinition="varchar(5)")
     private String tamanho;
 
     @JsonIgnore
-    @ManyToMany(mappedBy="produtos")
-    private Set<Carrinho> carrinho;
+    @OneToMany(mappedBy="produto")
+    private Set<Itens> itens;
     
     public Produto() {}
     
@@ -36,12 +37,12 @@ public class Produto {
         this.tamanho = tamanho;
     }
 
-    public Produto(long id, String modelo, String marca, String tamanho, Set<Carrinho> carrinho) {
+    public Produto(long id, String modelo, String marca, String tamanho, Set<Itens> itens) {
         this.id = id;
         this.modelo = modelo;
         this.marca = marca;
         this.tamanho = tamanho;
-        this.carrinho = carrinho;
+        this.itens = itens;
     }
 
     public long getId() {
@@ -68,6 +69,14 @@ public class Produto {
         this.marca = marca;
     }
 
+    public double getValor() {
+        return this.valor;
+    }
+
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+
     public String getTamanho() {
         return this.tamanho;
     }
@@ -76,12 +85,12 @@ public class Produto {
         this.tamanho = tamanho;
     }
 
-    public Set<Carrinho> getCarrinho() {
-        return this.carrinho;
+    public Set<Itens> getItens() {
+        return this.itens;
     }
 
-    public void setCarrinho(Set<Carrinho> carrinho) {
-        this.carrinho = carrinho;
+    public void setItens(Set<Itens> itens) {
+        this.itens = itens;
     }
 
     @Override
@@ -91,7 +100,7 @@ public class Produto {
             ", modelo='" + getModelo() + "'" +
             ", marca='" + getMarca() + "'" +
             ", tamanho='" + getTamanho() + "'" +
-            ", carrinho='" + getCarrinho() + "'" +
+            ", carrinho='" + getItens() + "'" +
             "}";
     }
 }

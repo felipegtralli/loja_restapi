@@ -27,6 +27,7 @@ public class Cliente {
     private String nome;
     private String cpf;
     private String email;
+    @JsonIgnore
     private String senha;
 
     @JsonIgnore
@@ -61,6 +62,13 @@ public class Cliente {
         this.endereco = endereco;
         this.carrinho = carrinho;
         this.pedido = pedido;
+    }
+
+    public void setAll(Cliente cliente) {
+        this.setNome(cliente.getNome());
+        this.setCpf(cliente.getCpf());
+        this.setEmail(cliente.getEmail());
+        this.setSenha(cliente.getSenha());
     }
 
     public long getId() {

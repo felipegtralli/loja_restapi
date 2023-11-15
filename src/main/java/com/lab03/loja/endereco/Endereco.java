@@ -48,6 +48,15 @@ public class Endereco {
         this.cliente = cliente;
     }
 
+    public void setAll(Endereco endereco) {
+        this.cep = endereco.getCep();
+        this.rua = endereco.getRua();
+        this.bairro = endereco.getBairro();
+        this.cidade = endereco.getCidade();
+        this.estado = endereco.getEstado();
+        this.complemento = endereco.getComplemento();
+    }
+
     public long getId() {
         return this.id;
     }
@@ -115,14 +124,12 @@ public class Endereco {
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
-            ", cep='" + getCep() + "'" +
-            ", rua='" + getRua() + "'" +
-            ", bairro='" + getBairro() + "'" +
-            ", cidade='" + getCidade() + "'" +
-            ", estado='" + getEstado() + "'" +
-            ", complemento='" + getComplemento() + "'" +
-            ", cliente='" + getCliente() + "'" +
+            "cep='" + getCep() + "'" +
+            ",rua='" + getRua() + "'" +
+            ",bairro='" + getBairro() + "'" +
+            ",cidade='" + getCidade() + "'" +
+            ",estado='" + getEstado() + "'" +
+            ",complemento='" + getComplemento() + "'" +
             "}";
     }
 }

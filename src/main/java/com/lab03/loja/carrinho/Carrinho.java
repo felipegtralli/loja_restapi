@@ -1,12 +1,11 @@
 package com.lab03.loja.carrinho;
 
-import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lab03.loja.cliente.Cliente;
+import com.lab03.loja.itens.Itens;
 import com.lab03.loja.pedido.Pedido;
-import com.lab03.loja.produto.Produto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,29 +14,23 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
 public class Carrinho {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id_carrinho")
     private long id;
 
+    @JsonIgnore
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="id_cliente", referencedColumnName="id_cliente")
     private Cliente cliente;
 
-    @ManyToMany(cascade=CascadeType.ALL)
-    @JoinTable(name="itens",
-    joinColumns = 
-        {@JoinColumn(name="id_carrinho", referencedColumnName="id_carrinho")},
-      inverseJoinColumns = 
-        {@JoinColumn(name="id_produto", referencedColumnName="id_produto")})
-    private List<Produto> produtos;
+    @OneToMany(mappedBy="carrinho")
+    private Set<Itens> itens;
 
     @JsonIgnore
     @OneToMany(mappedBy="carrinho")
@@ -50,10 +43,10 @@ public class Carrinho {
     this.cliente = cliente;
   }
 
-  public Carrinho(long id, Cliente cliente, List<Produto> produtos, Set<Pedido> pedido) {
+  public Carrinho(long id, Cliente cliente, Set<Itens> itens, Set<Pedido> pedido) {
     this.id = id;
     this.cliente = cliente;
-    this.produtos = produtos;
+    this.itens = itens;
     this.pedido = pedido;
   }
 
@@ -73,12 +66,12 @@ public class Carrinho {
     this.cliente = cliente;
   }
 
-  public List<Produto> getProdutos() {
-    return this.produtos;
+  public Set<Itens> getItens() {
+    return this.itens;
   }
 
-  public void setProduto(List<Produto> produtos) {
-    this.produtos = produtos;
+  public void setItens(Set<Itens> itens) {
+    this.itens = itens;
   }
 
   public Set<Pedido> getPedido() {
@@ -94,7 +87,7 @@ public class Carrinho {
     return "{" +
       " id='" + getId() + "'" +
       ", cliente='" + getCliente() + "'" +
-      ", produto='" + getProdutos() + "'" +
+      ", itens='" + getItens() + "'" +
       ", pedido='" + getPedido() + "'" +
       "}";
   }

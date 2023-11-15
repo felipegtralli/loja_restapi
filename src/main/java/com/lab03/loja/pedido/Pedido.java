@@ -1,9 +1,12 @@
 package com.lab03.loja.pedido;
 
 import java.time.LocalDate;
+import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lab03.loja.carrinho.Carrinho;
 import com.lab03.loja.cliente.Cliente;
+import com.lab03.loja.itens.Itens;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,13 +23,18 @@ public class Pedido {
     @Column(name="id_pedido")
     private long id;
 
-    private String infoCliente;
-    private String itens;
+    @Column(columnDefinition="DATETIME DEFAULT NOW()", insertable=false)
     private LocalDate dataPedido;
-    private double valor;
+    private double valorTotal;
+    @Column(columnDefinition="VARCHAR(255) DEFAULT 'Aguardando Pagamento...'", insertable=false)
     private String statusPedido;
     private String Pagamento;
+    @Column(columnDefinition="TEXT")
+    private String itens;
+    @Column(columnDefinition="TEXT")
+    private String endereco;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="id_carrinho", nullable=false)
     private Carrinho carrinho;
@@ -37,16 +45,49 @@ public class Pedido {
 
     public Pedido() {}
 
-    public Pedido(long id, String infoCliente, String itens, LocalDate dataPedido, double valor, String statusPedido, String Pagamento, Carrinho carrinho, Cliente cliente) {
+    public Pedido(String Pagamento, Carrinho carrinho, Cliente cliente) {
+        this.Pagamento = Pagamento;
+        this.carrinho = carrinho;
+        this.cliente = cliente;
+        this.addItens();
+        this.calcValorPedido();
+        this.setEndereco();
+    }
+
+    public Pedido(long id, String itens, LocalDate dataPedido, double valorTotal, String statusPedido, String Pagamento, Carrinho carrinho, Cliente cliente) {
         this.id = id;
-        this.infoCliente = infoCliente;
         this.itens = itens;
         this.dataPedido = dataPedido;
-        this.valor = valor;
+        this.valorTotal = valorTotal;
         this.statusPedido = statusPedido;
         this.Pagamento = Pagamento;
         this.carrinho = carrinho;
         this.cliente = cliente;
+    }
+
+    public void addItens() {
+        Set<Itens> setItens = this.getCarrinho().getItens();
+        this.itens = "[";
+        for (Itens item : setItens) {
+            String produtos = "{" +
+            "id_produto='" + item.getProduto().getId() + "'" +            
+            ",modelo='" + item.getProduto().getModelo() + "'" +
+            ",marca='" + item.getProduto().getMarca() + "'" +
+            ",tamanho='" + item.getProduto().getTamanho() + "'" +
+            ",quantidade='" + item.getQuantidade() + "'" +
+            "}";
+            this.itens = this.itens.concat(produtos);
+        }
+        this.itens = this.itens.concat("]");
+    }
+
+    public void calcValorPedido() {
+        Set<Itens> itens = this.getCarrinho().getItens();
+        double valor = 0;
+        for (Itens item : itens) {
+            valor += (item.getProduto().getValor()) * item.getQuantidade(); 
+        }
+        this.valorTotal = valor;
     }
 
     public long getId() {
@@ -57,20 +98,20 @@ public class Pedido {
         this.id = id;
     }
 
-    public String getInfoCliente() {
-        return this.infoCliente;
-    }
-
-    public void setInfoCliente(String infoCliente) {
-        this.infoCliente = infoCliente;
-    }
-
     public String getItens() {
         return this.itens;
     }
 
     public void setItens(String itens) {
         this.itens = itens;
+    }
+
+    public String getEndereco() {
+        return this.endereco;
+    }
+
+    public void setEndereco() {
+        this.endereco = this.getCliente().getEndereco().toString();
     }
 
     public LocalDate getDataPedido() {
@@ -81,12 +122,12 @@ public class Pedido {
         this.dataPedido = dataPedido;
     }
 
-    public double getValor() {
-        return this.valor;
+    public double getValorTotal() {
+        return this.valorTotal;
     }
 
-    public void setValor(double valor) {
-        this.valor = valor;
+    public void setValorTotal(double valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     public String getStatusPedido() {
@@ -125,10 +166,9 @@ public class Pedido {
     public String toString() {
         return "{" +
             " id='" + getId() + "'" +
-            ", infoCliente='" + getInfoCliente() + "'" +
             ", itens='" + getItens() + "'" +
             ", dataPedido='" + getDataPedido() + "'" +
-            ", valor='" + getValor() + "'" +
+            ", valor='" + getValorTotal() + "'" +
             ", statusPedido='" + getStatusPedido() + "'" +
             ", Pagamento='" + getPagamento() + "'" +
             ", carrinho='" + getCarrinho() + "'" +
